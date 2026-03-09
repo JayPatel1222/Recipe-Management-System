@@ -1,0 +1,198 @@
+﻿@model mvc2025TermProject.Models.RecipeEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container mt-4">
+    <h1>Edit Recipe</h1>
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CategoryId" class="form-label"></label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ingredient type</label>
+                    <select id="ingredientType" class="form-control">
+                        <option selected>Select type</option>
+
+                        @foreach (var type in ViewBag.IngredientTypes as IEnumerable<SelectListItem>)
+                        {
+                            <option value="@type.Value">@type.Text</option>
+
+                        }
+                    </select>
+
+                    <label class="form-label mt-2">Ingredient</label>
+                    <select id="ingredientName" class="form-control">
+                        <option selected>Select ingredient</option>
+
+                       
+                        @foreach (var ing in ViewBag.Ingredients)
+                        {
+                            <option value="@ing.Id" data-type="@ing.IngTypeId">@ing.Name</option>
+
+                        }
+                    </select>
+
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Quantity</label>
+                            <input id="quantityInp" class="form-control" type="number" />
+                            @* <span asp-validation-for="Quantity" class="text-danger"></span>  *@
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">Unit</label>
+                            <select id="unit" class="form-control">
+                                <option selected>Select unit</option>
+                                @foreach (var unit in Enum.GetNames(typeof(UnitType)))
+                                {
+                                    <option value="@unit">@unit</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <button type="button" id="addIngredientBtn" class="btn btn-outline-primary btn-sm">+ Add Ingredient</button>
+                    </div>
+                </div>
+
+                <label class="form-label mt-3">Added Ingredients</label>
+                @{
+                    string ingredients = "";
+                    var allIngredients = ViewBag.Ingredients as IEnumerable<dynamic>;
+                }
+                @foreach (var ing in Model.SelectedIngredients)
+                {
+                    var ingredient = allIngredients?.FirstOrDefault(i => i.Id == ing.IngredientID);
+                    ingredients += $"{ing.Quantity} {ing.Unit} - {ingredient?.Name}\n";
+                }
+                <textarea id="addedIngredients" class="form-control" rows="4" readonly>@ingredients</textarea>
+
+                <div id="ingredientsContainer"></div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Instructions" class="form-label"></label>
+                    <textarea asp-for="Instructions" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Instructions" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Tips" class="form-label"></label>
+                    <textarea asp-for="Tips" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Tips" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PrepTime" class="control-label mt-2"></label>
+                    <input asp-for="PrepTime" class="form-control" />
+                    <span asp-validation-for="PrepTime" class="text-danger"></span>
+
+                    <label asp-for="CookTime" class="control-label  mt-2"></label>
+                    <input asp-for="CookTime" class="form-control" />
+                    <span asp-validation-for="CookTime" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Temperature" class="form-label"></label>
+                    <input asp-for="Temperature" class="form-control" type="number" />
+                    <span asp-validation-for="Temperature" class="text-danger"></span>
+
+                    <label asp-for="Servings" class="form-label mt-2"></label>
+                    <input asp-for="Servings" class="form-control" type="number" />
+                    <span asp-validation-for="Servings" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 mt-3">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+
+    @{
+
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+
+    <script>
+
+        let ingredientIndex = 0;
+
+        document.getElementById("ingredientType").addEventListener("change", function () {
+            const selectedType = this.value;
+            const ingredientSelect = document.getElementById("ingredientName");
+
+            const optionsArray =  Array.from(ingredientSelect.options);
+            optionsArray.forEach(opt => {
+                if (opt.value === "") {
+                    opt.hidden = false;
+                    return;
+                }
+
+                const type = opt.getAttribute("data-type");
+                opt.hidden = (selectedType && (selectedType !== type));
+            });
+
+            ingredientSelect.selectedIndex = 0;
+        });
+        document.getElementById("addIngredientBtn").onclick = function() {
+
+            const typeSelect = document.getElementById("ingredientType");
+            const nameSelect = document.getElementById("ingredientName");
+            const output = document.getElementById("addedIngredients");
+            const container = document.getElementById("ingredientsContainer");
+            // const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+            const typeValue = typeSelect.value;
+            const nameText = nameSelect.options[nameSelect.selectedIndex].text;
+            const nameValue = nameSelect.value;
+            const  quantityValue = document.getElementById("quantityInp").value;
+            const  unitValue = document.getElementById("unit").value;
+
+            if (typeValue === "" || nameValue === "") {
+                alert("Please select both ingredient type and ingredient.");
+                return;
+            }
+            if (output.value === "") {
+
+                output.value = quantityValue + " " + unitValue + " - " + nameText + "\n";
+            } else {
+                output.value += quantityValue + " " + unitValue + " - " + nameText + "\n";
+            }
+
+            function addHiddenInput(name, value) {
+                  const input = document.createElement("input");
+                  input.type = "hidden";
+                  input.name = name;
+                  input.value = value;
+                  container.appendChild(input);
+            }
+            addHiddenInput("SelectedIngredients[" + ingredientIndex + "].IngredientTypeID", typeValue);
+            addHiddenInput("SelectedIngredients[" + ingredientIndex + "].IngredientID", nameValue);
+            addHiddenInput("SelectedIngredients[" + ingredientIndex + "].Quantity", quantityValue);
+            addHiddenInput("SelectedIngredients[" + ingredientIndex + "].Unit", unitValue);
+
+            ingredientIndex++;
+            typeSelect.selectedIndex = 0;
+            nameSelect.selectedIndex = 0;
+
+        };
+    </script>
+
+}

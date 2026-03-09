@@ -1,0 +1,488 @@
+:root {
+    --burnt-sienna: #dd6e42ff;
+    --dutch-white: #e8dab2ff;
+    --paynes-gray: #4f6d7aff;
+    --columbia-blue: #c0d6dfff;
+    --platinum: #eaeaeaff;
+    --columbia-blue-ligth: rgb(219, 230, 235);
+}
+
+*{
+    box-sizing:border-box;
+}
+body {
+   margin:0;
+   font-family: 'Inter', sans-serif;
+}
+
+header, footer {
+    background-color: var(--columbia-blue);
+    font-size: 1.5em;
+}
+main{
+    margin-bottom:120px;
+}
+
+.fixed-recipe-image {
+    width: 200px;
+    height: 200px; 
+    object-fit: cover; 
+    object-position: center; 
+    border-radius: 6px;
+}
+
+/*Nav links*/
+.navbar-nav .nav-link {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 6px;
+    transition: color 0.25s ease;
+}
+
+    .navbar-nav .nav-link::before {
+        content: "";
+        position: absolute;
+        left: -100%;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #6a11cb, #2575fc);
+        transition: all 0.4s ease;
+        z-index: -1;
+        opacity: 0.15;
+    }
+
+    .navbar-nav .nav-link:hover::before {
+        left: 0;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #2575fc;
+    }
+
+/*Create Recipe Button*/
+.btn-gradient {
+    background: linear-gradient(90deg, #c0d6df, #eaeaea);
+    color: #4f6d7a;
+    border: 1px solid #cbd8df;
+}
+
+    .btn-gradient:hover {
+        opacity: 0.9;
+    }
+/*Share and report Link*/
+.feed-btn.share {
+    background: #6f42c1;
+    color: #fff;
+}
+
+.feed-btn.report {
+    background: #fd7e14;
+    color: #fff;
+}
+
+
+/* Fancy Filter Panel */
+.filter-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    border: none;
+}
+
+.filter-header {
+    background: var(--dutch-white);
+    padding: 18px 24px;
+}
+
+    .filter-header h4 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+.filter-body {
+    padding: 26px;
+    background: #ffffff;
+}
+
+/* Labels */
+.fancy-label {
+    font-weight: 600;
+    color: #2d2d2d;
+}
+
+/* Inputs */
+.fancy-input {
+    border-radius: 12px !important;
+    height: 46px;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+    .fancy-input:focus {
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+/* Buttons */
+.fancy-btn {
+    border-radius: 12px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+    transition: 0.2s;
+    
+    
+}
+.fancy-btn-search {
+    background: var(--dutch-white);
+}
+.fancy-btn-reset {
+    background: var(--columbia-blue-ligth);
+}
+    .fancy-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+/*Back to full list*/
+.fancy-btn-back {
+    background: var(--paynes-gray);
+    color: white;
+    padding: 10px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s ease-in-out;
+}
+
+    .fancy-btn-back:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+
+
+/*Create Recipe button*/
+.create-recipe-btn {
+    display: inline-block;
+    background: var(--burnt-sienna);
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding: 14px 34px;
+    border-radius: 14px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+    transition: 0.25s ease;
+}
+
+    .create-recipe-btn:hover {
+        background: #c65a33; /* slightly darker burnt sienna */
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+    }
+
+    .create-recipe-btn:active {
+        transform: translateY(-1px);
+    }
+
+/*Recipes index Css*/
+.recipe-feed-section {
+    background: var(--platinum);
+    border-radius: 28px;
+    padding: 32px;
+    margin-top: 30px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+}
+
+/* Feed container */
+.recipe-feed-item {
+    display: flex;
+    gap: 24px;
+    padding: 22px;
+    border-radius: 18px;
+    background: white;
+    border: 2px solid var(--columbia-blue-light);
+    margin-bottom: 26px;
+    transition: .2s;
+}
+
+    .recipe-feed-item:hover {
+        border-color: var(--burnt-sienna);
+        transform: translateY(-4px);
+    }
+
+/* Image section */
+.feed-img {
+    width: 190px;
+    height: 150px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+    .feed-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* Content */
+.feed-content h2 {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--paynes-gray);
+}
+
+.feed-category {
+    display: inline-block;
+    background: var(--columbia-blue);
+    color: var(--paynes-gray);
+    font-weight: 600;
+    font-size: .85rem;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 6px;
+}
+
+.feed-meta {
+    margin-top: 8px;
+    font-size: .88rem;
+    color: var(--paynes-gray);
+    opacity: .8;
+}
+
+.feed-snippet {
+    margin-top: 10px;
+    max-height: 52px;
+    overflow: hidden;
+    color: var(--paynes-gray);
+}
+
+/* Action buttons */
+.feed-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+}
+
+.feed-btn {
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    transition: 0.2s;
+}
+
+    .feed-btn.view {
+        background: var(--paynes-gray);
+    }
+
+    .feed-btn.edit {
+        background: var(--burnt-sienna);
+    }
+
+    .feed-btn.delete {
+        background: #d9534f;
+    }
+
+    .feed-btn:hover {
+        transform: scale(1.05);
+    }
+
+body {
+    background-image: url('/Images/bg-img-recipes2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        /*//background: rgb(250, 237, 237, 0.46);*/
+        backdrop-filter: blur(3px);
+        z-index: -1;
+    }
+#liveDateTime{
+    color:#000;
+    font-family:Garamond
+}
+
+/*Media Query */
+@media (max-width: 768px) {
+    .recipe-feed-item {
+        flex-direction: column; /* stack vertically */
+        gap: 10px;
+    }
+
+        .recipe-feed-item .feed-img,
+        .recipe-feed-item .feed-content {
+            width: 100% !important; /* full width on mobile */
+        }
+
+    .feed-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .feed-content h2 {
+        font-size: 1.3rem; /* reduce header size for mobile */
+    }
+}
+@media (max-width: 576px) {
+    .action-flex-group {
+        display: flex !important;
+        flex-wrap: wrap;
+        align-content: space-around;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+        align-items: stretch;
+        width: 100%;
+    }
+
+        .action-flex-group .feed-btn {
+            width: 100%; /* full width buttons on small screens */
+            text-align: center;
+        }
+}
+/*CSS For printing Recipe*/
+@media print {
+
+    /* Reset the whole page */
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: "Times New Roman", Georgia, serif !important;
+    }
+
+        /* Hide EVERYTHING except the recipe */
+        body * {
+            visibility: hidden !important;
+        }
+
+    /* Show ONLY recipe section */
+    #recipeContent,
+    #recipeContent * {
+        visibility: visible !important;
+    }
+
+    /* Make recipe full width when printing */
+    #recipeContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Hide filter card box visuals */
+    .filter-card {
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+    }
+
+    .filter-header {
+        background: none !important;
+        border-bottom: 2px solid #000 !important;
+        padding-bottom: 10px !important;
+    }
+
+    /* MAIN IMAGE: thumbnail size */
+    .recipe-main-image {
+        max-width: 220px !important;
+        height: auto !important;
+        display: block;
+        margin: 10px auto !important;
+        border: 1px solid #bbb !important;
+        padding: 4px !important;
+    }
+
+    /* HIDE ALL other images */
+    .recipe-content img:not(.recipe-main-image) {
+        display: none !important;
+    }
+
+    /* Make text readable */
+    .recipe-content,
+    .recipe-content * {
+        font-size: 14pt !important;
+        color: black !important;
+        background: transparent !important;
+    }
+
+    /* Flatten textarea for instructions/tips */
+    textarea.form-control {
+        border: none !important;
+        resize: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow:hidden;
+    }
+
+    /* Remove UI controls: buttons, actions, modals, links, etc. */
+    .feed-btn,
+    .btn,
+    button,
+    a[href],
+    #toggleTemp,
+    .modal,
+    .modal-backdrop,
+    .navbar,
+    footer,
+    .d-flex.justify-content-center,
+    .filter-card .fancy-btn,
+    .no-print {
+        display: none !important;
+    }
+    /* Remove box, shadow, background, padding from recipe body section */
+    .recipe-feed-section {
+        box-shadow: none !important;
+        background: white !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+        /* Remove inner boxes (Bootstrap cards, bg-light, rounded, list-group boxes) */
+        .recipe-feed-section * {
+            box-shadow: none !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Remove <ul>/<li> bullet spacing so it's print-clean */
+        .recipe-feed-section ul,
+        .recipe-feed-section li {
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+    /* Remove the bg-light from ingredients and image wrapper */
+    .bg-light {
+        background: transparent !important;
+    }
+
+    /* Remove the border on image container */
+    .recipe-feed-section .border {
+        border: none !important;
+    }
+
+
+    /* Prevent blank pages */
+    @page {
+        margin: 15mm;
+    }
+}

@@ -1,0 +1,47 @@
+﻿@model mvc2025TermProject.Models.Category
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+<div class="container py-5  bg-light border rounded-3 p-5">
+    <div class="mb-4">
+        <h1 class="fw-bold"> @ViewData["Title"]</h1>
+        <h3>Add New Category</h3>
+    </div>
+
+    <form asp-action="Create" method="post" class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="col-md-6">
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fs-5">Category Name:</label>
+                <input asp-for="Name" class="form-control form-control-lg fs-6" placeholder="Type here..." required />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="Details" class="form-label fs-5">Description:</label>
+                <textarea asp-for="Details" rows="4" class="form-control form-control-lg fs-6" placeholder="Type here..."></textarea>
+                <span asp-validation-for="Details" class="text-danger small"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary btn-lg px-4">Create Category</button>
+            </div>
+
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-dark btn-lg px-4">Back to List</a>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,226 @@
+﻿@model mvc2025TermProject.Models.Recipe
+@{
+    ViewData["Title"] = "_REPPartial";
+}
+
+    <div class="d-flex align-content-start flex-wrap  ms-auto gap-2">
+        <a href="javascript:void(0);"
+        class="feed-btn share"
+        data-bs-toggle="modal"
+        data-bs-target="#shareModal"
+        data-id="@Model.Id"
+      >
+            Share
+        </a>
+    <a href="javascript:void(0);"
+       class="feed-btn report"
+       data-bs-toggle="modal"
+       data-bs-target="#reportModal"
+       data-id="@Model.Id"
+        >
+        Report
+    </a>
+    @if (ViewBag.ShowPrintbtn ?? false)
+    {
+        <button type="button"
+        id="printRecipeBtn"
+            class="feed-btn print  btn-primary">
+        Print Recipe
+    </button>
+    }
+    </div>
+    
+
+    @* For printing recipe *@
+
+<!-- #region JS for Modal -->
+<script>
+       document.addEventListener("DOMContentLoaded", () => {
+
+
+          const modal = document.getElementById("shareModal");
+          if (modal) {
+              modal.addEventListener("show.bs.modal", function (event) {
+                  const button = event.relatedTarget;   // Share button clicked
+                  const recipeId = button.getAttribute("data-id");
+                  document.getElementById("shareRecipeId").value = recipeId;
+              });
+          }
+
+        });
+
+       document.addEventListener("DOMContentLoaded", function () {
+
+           const params = new URLSearchParams(window.location.search);
+
+           if (params.get("shared") === "1") {
+
+               // Force close any modal that Bootstrap thinks is still open
+               document.querySelectorAll('.modal.show').forEach(m => {
+                   let instance = bootstrap.Modal.getInstance(m);
+                   if (instance) instance.hide();
+               });
+
+               // Remove any leftover black backdrops from previous modal
+               document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+
+               // Now safely open the success modal
+               const successModal = new bootstrap.Modal(document.getElementById("shareSuccessModal"));
+               successModal.show();
+           }
+           if (params.get("reported") === "1") {
+
+               // Force close any modal that Bootstrap thinks is still open
+               document.querySelectorAll('.modal.show').forEach(m => {
+                   let instance = bootstrap.Modal.getInstance(m);
+                   if (instance) instance.hide();
+               });
+
+               // Remove any leftover black backdrops from previous modal
+               document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+
+               // Now safely open the success modal
+               const successModal = new bootstrap.Modal(document.getElementById("ReportSuccessModal"));
+               successModal.show();
+           }
+
+       });
+           document.addEventListener("DOMContentLoaded", function () {
+
+           // redirects after share success modal closes
+           document.querySelectorAll('.redirect-after-close').forEach(btn => {
+               btn.addEventListener("click", () => {
+                   // When modal fully finishes closing:
+                   const modalEl = document.getElementById("shareSuccessModal");
+
+                   modalEl.addEventListener('hidden.bs.modal', function () {
+                       window.location.href = "/Recipes/Index";
+                   }, { once: true });
+               });
+           });
+
+       });
+
+            document.addEventListener("DOMContentLoaded", () => {
+           const modal = document.getElementById("reportModal");
+
+           modal.addEventListener("show.bs.modal", function (event) {
+               const button = event.relatedTarget;
+               const recipeId = button.getAttribute("data-id");
+               document.getElementById("reportRecipeId").value = recipeId;
+           });
+       });
+        document.addEventListener("DOMContentLoaded", function () {
+        // redirct after report success modal closes
+           document.querySelectorAll('.redirect-after-close').forEach(btn => {
+               btn.addEventListener("click", () => {
+                   // When modal fully finish closing:
+                   const modalEl = document.getElementById("ReportSuccessModal");
+
+                   modalEl.addEventListener('hidden.bs.modal', function () {
+                       window.location.href = "/Recipes/Index";
+                   }, { once: true });
+               });
+           });
+        });
+           document.addEventListener("DOMContentLoaded", function () {
+
+                const emailInput = document.getElementById("EmailInput");
+                const emailError = document.getElementById("EmailError");
+                const sharebtnSubmit = document.getElementById("sharebtnSubmit");
+                const pattern = new RegExp("^\\S+@@\\S+\\.\\S+$");
+
+                   sharebtnSubmit.addEventListener("click", function (e){
+
+
+                    const value = emailInput.value.trim();
+                    emailError.innerHTML = "";
+
+                    if (value === "") {
+                            emailError.innerHTML =  `<div class="my-error-box">⚠ Email cannot be empty</div>`;
+                        e.preventDefault();
+                        return;
+                    }
+
+
+
+
+                    if (!pattern.test(value)) {
+                        showError("Invalid email format.");
+                        e.preventDefault();
+                        return;
+                    }
+                });
+            });
+
+              document.addEventListener("DOMContentLoaded", function () {
+                    const repEmail = document.getElementById("repEmail");
+                    const ReportEmailError =  document.getElementById("ReportEmailError");
+                    const repReasonError = document.getElementById("repReason");
+                    const reason = document.getElementById("reason");
+                    const reportBtnSubmit = document.getElementById("reportBtnSubmit");
+                    let flagToShowWhichErrorMessage  = 0;
+                    const emailreasonError = document.getElementById("email&reasonError");
+
+                 reportBtnSubmit.addEventListener("click",function(e){
+                          const emailValue = repEmail.value.trim();
+                          const reasonValue = reason.value.trim();
+                          ReportEmailError.innerHTML = '';
+                          emailreasonError.innerHTML = '';
+                          repReasonError.innerHTML = '';
+
+                          if(emailValue === "" && reasonValue === ""){
+                            emailreasonError.innerHTML = `<div class="my-error-box">⚠ Email And reason cannot be empty</div>`;
+                            e.preventDefault();
+                            return;
+                          }
+
+                  if (emailValue === "") {
+                         flagToShowWhichErrorMessage = 1;
+                      showError("Email is required and cannot be empty.");
+                      flagToShowWhichErrorMessage = 0;
+                      e.preventDefault();
+
+                      return;
+                  }
+
+                     if (reasonValue === "") {
+                         showError("Reason is require and  cannot be empty.");
+                         e.preventDefault();
+
+                         return;
+                     }
+
+
+                  if (!pattern.test(emailValue)) {
+                      showError("Invalid email format.");
+                      e.preventDefault();
+
+                      return;
+                  }
+
+                 });
+                      function showError(msg) {
+                        if(flagToShowWhichErrorMessage === 1){
+
+                           ReportEmailError.innerHTML = `
+                         <div class="my-error-box">⚠ ${msg}</div>`;
+
+                      }
+                      if(flagToShowWhichErrorMessage === 0){
+                              repReasonError.innerHTML = `
+                               <div class="my-error-box">⚠ ${msg}</div>`;
+
+                      }else{
+
+                             ReportEmailError.innerHTML = `
+                               <div class="my-error-box">⚠ ${msg}</div>`;
+                      }
+                 };
+    });
+
+
+</script>
+
+<!-- #endregion -->
+

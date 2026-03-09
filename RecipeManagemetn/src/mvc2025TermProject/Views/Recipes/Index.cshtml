@@ -1,0 +1,241 @@
+﻿@model Pagination<mvc2025TermProject.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Recipes";
+}
+
+<h1 class="text-lg-center my-3">@ViewData["Title"]</h1>
+
+@if (TempData["Confirmation"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Confirmation"]
+    </div>
+}
+
+<div class="filter-card mb-4">
+
+    <!-- Header -->
+    <div class="filter-header">
+        <h4>Search Filters</h4>
+    </div>
+
+    <!-- Body -->
+    <div class="filter-body fs-6">
+        <form asp-action="Index" method="get">
+            <div class="row g-4 align-items-center">
+               
+
+                <div class="col-md-4">
+                    <label class="fancy-label">Search by Name</label>
+                    <input type="text" class="form-control fancy-input" name="searchFilter" value='@ViewData["searchByName"]' placeholder="Enter name...">
+                </div>
+                @{
+                    string formattedDateTo = "", formattedDateFrom ="";
+                    if (ViewBag.dateTo != null && ViewBag.dateFrom != null)
+                    {
+                        DateTime dateTo = ViewBag.dateTo;
+                         formattedDateTo = dateTo.ToString("yyyy-MM-dd");
+                        DateTime datefrom = ViewBag.dateFrom;
+                         formattedDateFrom = datefrom.ToString("yyyy-MM-dd");
+                    }
+
+                }
+
+                <div class="col-md-4">
+                    <label class="fancy-label">From</label>
+                    <input type="date" name="dateFrom" class="form-control fancy-input" value="@formattedDateFrom">
+                </div>
+                <div class="col-md-4">
+                    
+                    <label class="fancy-label">To</label>
+                    <input type="date" name="dateTo" class="form-control fancy-input" value="@formattedDateTo">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="fancy-label">Category</label>
+                    <select name="categoryId" class="form-control">
+                        <option value="" selected>Select category</option>
+
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            if (ViewBag.categoryId == category.Id)
+                            {
+                                <option value="@category.Id" selected>@category.NameStatus</option>
+                            }
+                            else
+                            {
+                                <option value="@category.Id">@category.NameStatus</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="fancy-btn fancy-btn-search">
+                            🔍 Search
+                        </button>
+                        <button type="reset" class="fancy-btn fancy-btn-reset">
+                            ♻ Reset
+                        </button>
+                        @if (ViewBag.showbkBtn == true)
+                        {
+                            <a asp-action="Index" class="fancy-btn fancy-btn-back">
+                                ⤺ Back to Full List
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    
+</div>
+
+
+<p class="text-center">
+    <a asp-action="Create" class="create-recipe-btn">➕ Create New Recipe</a>
+    <a asp-action="Create" asp-controller="Images" class="create-recipe-btn">Upload Images</a>
+    @if (ViewBag.showbkBtn)
+    {
+        <h4 class="text-center"> Total Recipe Found: @ViewBag.recipeCount</h4>
+    }
+    else
+    {
+        <h4 class="text-center"> Total Recipes: @ViewBag.recipeCount</h4>
+    }
+</p>
+<div class="container mt-4">
+
+    @{
+        string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        string nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <div class="d-flex justify-content-between mb-4">
+
+        <a asp-action="Index"
+           asp-route-pageNum="@(Model.PageIndex - 1)"
+           asp-route-dateFrom="@ViewBag.dateFrom"
+           asp-route-dateTo="@ViewBag.dateTo"
+           asp-route-searchFilter="@ViewData["searchByName"]"
+           asp-route-categoryId="@ViewBag.categoryId"
+           class="btn btn-primary @prevDisabled">
+            ◀ Previous
+        </a>
+
+        <a asp-action="Index"
+           asp-route-pageNum="@(Model.PageIndex + 1)"
+           asp-route-dateFrom="@ViewBag.dateFrom"
+           asp-route-dateTo="@ViewBag.dateTo"
+           asp-route-searchFilter="@ViewData["searchByName"]"
+           asp-route-categoryId="@ViewBag.categoryId"
+           class="btn btn-primary @nextDisabled">
+            Next ▶
+        </a>
+
+    </div>
+
+</div>
+
+<div class="recipe-feed-section fs-6">
+    @foreach (var item in Model)
+    {
+        <a asp-action="Details" asp-route-id="@item.Id" class="recipe-feed-link text-decoration-none">
+
+        <div class="recipe-feed-item">
+
+            @* Check styles / classes for image width (Only choosing one approved image to display in Index Page)  *@
+                <div class="img-thumbnail">
+                    @{
+                        bool hasApprovedImage = false;
+                    }
+                    @if (item.Images != null)
+                    {
+                        hasApprovedImage = item.Images?.Any(img => img.Status) ?? false;
+                        if (hasApprovedImage)
+                        {
+                            foreach (var img in item.Images)
+                            {
+                                @if (img.Status)
+                                {
+                                    <img class="img-thumbnail fixed-recipe-image" src="@img.Path" />
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail" src="https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" />
+                    }
+
+                </div>
+
+            <div class="feed-content">
+
+                <h2>@item.Name</h2>
+
+                <span class="feed-category">@item.Category.Name</span>
+                <span class="fs-6 text-secondary"><i>Created On</i></span>
+                <span class="feed-category">@item.CreationDate?.ToString("yyyy-MM-dd")</span>
+
+                <p class="feed-meta">
+                    Prep @item.FormattedPrepTime • Cook @item.FormattedCookTime • @item.Servings servings
+                </p>
+
+                <p class="feed-snippet">
+                    @item.Instructions
+                </p>
+                    <div >
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="feed-btn edit">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="feed-btn delete">Delete</a>
+                    </div>
+
+            </div>
+                @await Html.PartialAsync("_REPPartial", item)
+        </div>
+           
+        </a>
+        
+
+    }
+
+    <p class="fs-2 text-center">@ViewBag.NoRecipeFound</p>
+
+</div>
+<partial name="_ModalPartial" />
+
+<script>
+   
+        const toggleBtn = document.getElementById("toggleTemp");
+        let showingCelsius = false;
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", () => {
+                const temps = document.querySelectorAll(".temp-value");
+                showingCelsius = !showingCelsius;
+
+                temps.forEach(td => {
+                    const f = parseFloat(td.dataset.f);
+
+                    if (!isNaN(f)) {
+                        if (showingCelsius) {
+                            const c = ((f - 32) * 5 / 9).toFixed(1);
+                            td.textContent = `${c}°C`;
+                        } else {
+                            td.textContent = `${f}°F`;
+                        }
+                    } else {
+                        td.textContent = "";
+                    }
+                });
+
+                toggleBtn.textContent = showingCelsius ? "Show °F" : "Show °C";
+            });
+        }
+
+    
+</script>

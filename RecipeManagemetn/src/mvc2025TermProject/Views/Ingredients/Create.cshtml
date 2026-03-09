@@ -1,0 +1,57 @@
+﻿@model mvc2025TermProject.Models.Ingredient
+
+@{
+    ViewData["Title"] = "Manage Ingredients";
+}
+
+<div class="container py-5  bg-light border rounded-3 p-5">
+    <h1 class="mb-5">@ViewData["Title"]</h1>
+
+    <h3 class="mt-4 mb-4">Add new Ingredient</h3>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-7 col-lg-6">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fs-5"></label>
+                    <input asp-for="Name" class="form-control form-control-lg fs-6" placeholder="Type here..." required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IngredientTypeID" class="form-label fs-5"></label>
+                    <select asp-for="IngredientTypeID" class="form-control form-control-lg fs-6" asp-items="ViewBag.IngredientTypeID" required>
+                        <option value="">Select type...</option>
+                    </select>
+                    <span asp-validation-for="IngredientTypeID" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-4">
+                    <label asp-for="Details" class="form-label fs-5"></label>
+                    <textarea asp-for="Details" class="form-control" rows="6" placeholder="Type here..."></textarea>
+                    <span asp-validation-for="Details" class="text-danger"></span>
+                </div>
+
+
+                <div class="d-flex justify-content-center justify-content-md-start">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        Add Ingredient
+                    </button>
+                </div>
+            </form>
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-dark btn-lg px-4">Back to List</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

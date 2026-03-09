@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CustomUser> SignInManager
+@inject UserManager<CustomUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - mvc2025TermProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/mvc2025TermProject.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light mb-5">
+            <div class="container-fluid">
+
+                <a class="navbar-brand d-flex align-items-center flex-shrink-0"
+                   asp-controller="Recipes" asp-action="Index">
+                    <img src="~/Images/website-logo.png"
+                         alt="Logo"
+                         class="me-2"
+                         style="height:40px;width:auto;" />
+                    <span class="fs-4 text-truncate">The Recipe Town</span>
+                </a>
+
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav" aria-controls="navbarNav"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+
+                    
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Categories" asp-action="Index">Categories</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Ingredients" asp-action="Index">Ingredients</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="IngredientTypes" asp-action="Index">IngredientTypes</a></li>
+                        }
+                        <li class="nav-item"><a class="nav-link" asp-controller="Recipes" asp-action="Index">Recipe</a></li>
+                    </ul>
+
+                    
+                    <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0 ms-lg-auto fs-6">
+                        <span id="liveDateTime" class="live-clock"></span>
+                        <partial name="_LoginPartial" />
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3 fs-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class=" text-center border-top footer text-muted position-fixed">
+            © 2025 Copyright:
+            <a class="text-reset fw-bold" asp-controller="Home" asp-action="Index">The Recipe Town</a>
+    </footer>
+    <script>
+                
+            const now = new Date();
+
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const formatted = `${year}-${month}-${day}`;
+
+            document.getElementById("liveDateTime").textContent = formatted;
+        
+
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

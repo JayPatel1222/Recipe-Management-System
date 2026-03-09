@@ -1,0 +1,75 @@
+﻿@model IEnumerable<mvc2025TermProject.Models.Ingredient>
+
+@{
+    ViewData["Title"] = "Ingredients";
+}
+<div class=" bg-light border rounded-3 p-5">
+<h1> @ViewData["Title"]</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Message"]
+    </div>
+}
+<p>
+        <a asp-action="Create" class="btn btn-primary btn-lg px-4">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Details)
+            </th>
+            <th>
+                Requested Changes
+            </th>
+            <th></th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewDetails)
+            </td>
+            <td>
+                @if (item.Approved)
+                {
+                    <p class="text-success">Approved</p>
+                }
+                else
+                {
+                    <p class="text-warning">Pending</p>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>

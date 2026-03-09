@@ -1,0 +1,238 @@
+﻿@model mvc2025TermProject.Models.Recipe
+
+<div class="container mt-4 recipe-content" id="recipeContent">
+
+    <div class="filter-card mb-4">
+        <h2 class="filter-header text-center fw-bold mb-3">@Model.Name</h2>
+        <div class="row g-3  filter-body">
+            <div class="col-md-6">
+                <div class="mt-2">
+                    <span class="fw-bold">Category:</span>
+                    <span>@Model.Category?.Name</span>
+                </div>
+
+                @if (ViewBag.IsOwner)
+                {
+                    <div class="mt-2">
+                        <span class="fw-bold">Status:</span>
+                        <span>@Model.Status</span>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-6">
+                <div>
+                    <span class="fw-bold">Created:</span>
+                    <span>@Model.CreationDate</span>
+                </div>
+
+                <div>
+                    <span class="fw-bold">By:</span>
+                    <span>@Model.User?.FirstName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* <div class="d-flex justify-content-center gap-3 mb-4">
+        <a asp-action="Index" class="text-decoration-none fancy-btn fancy-btn-search">Share</a>
+        <a asp-action="Index" class="text-decoration-none fancy-btn fancy-btn-reset">Print</a>
+        <a asp-action="Index" class="fancy-btn fancy-btn-back">Report</a>
+
+    </div> *@
+
+    <div class="mb-4 recipe-feed-section">
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="mt-2">
+                    <span class="fw-bold">@Html.DisplayNameFor(m => m.Servings):</span>
+                    <span>@Model.Servings</span>
+                </div>
+                <div class="mt-2">
+                    <span class="fw-bold">@Html.DisplayNameFor(m => m.PrepTime):</span>
+                    <span>@Model.FormattedPrepTime</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    @if (Model.CookTime != null)
+                    {
+                        <span class="fw-bold">@Html.DisplayNameFor(m => m.CookTime):</span>
+                        <span>@Model.FormattedCookTime</span>
+                    }
+                </div>
+                <div>
+                    @if (Model.Temperature != null)
+                    {
+
+                        <div>
+                            <span class="fw-bold">Temperature:</span>
+                            <div class="temp-value" data-f="@Model.Temperature">
+                                @Html.DisplayFor(modelItem => Model.Temperature)
+                                <span>°F</span>
+                            </div>
+                            <button id="toggleTemp" class="btn btn-sm btn-outline-primary mt-1">
+                                Show °C
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4 p-3">
+                <h4 class="fw-bold">Ingredients</h4>
+                <div class="bg-light rounded p-2">
+                    <ul class="list-group ps-4 fs-5">
+                        @if (Model.RecipeIngredients != null)
+                        {
+                            @foreach (var ing in Model.RecipeIngredients)
+                            {
+                                <li>
+                                    @* <li class="list-group-item"> *@
+                                    @ing.Quantity @ing.Unit – @ing.Ingredient?.Name
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="mb-4">
+                <h4 class="fw-bold">Instructions</h4>
+                <ol class="instruction-list fs-5">
+                    @foreach (var step in (Model.Instructions ?? "")
+                                        .Split('\n')
+                                        .Select(i => i.Trim())
+                                        .Where(i => i.Length > 0)// remove blank lines
+                                        .Where(i => !char.IsDigit(i[0]))// remove lines starting with a number
+                                        )
+                    {
+                        <li>@step</li>
+                    }
+                </ol>
+            </div>
+        </div>
+        <div class="row g-3 px-2">
+            <div class="col-md-6">
+                <div>
+                    <h4 class="fw-bold p-3">Tips</h4>
+                    <ol class="instruction-list fs-5">
+                        @foreach (var tips in (Model.Tips ?? "")
+                                                .Split('\n')
+                                                .Select(t => t.Trim())
+                                                .Where(t => t.Length > 0)                      
+                                                .Where(t => !char.IsDigit(t[0]))
+                                                )
+                        {
+                            <li>@tips</li>
+                        }
+                    </ol>
+                </div>
+            </div>
+            <div class="col-md-6">
+                @if (Model.Nutrition != null)
+                {
+                    <h4 class="fw-bold">Nutrition Facts</h4>
+                    <table class="table table-sm">
+                        <tbody class="border rounded">
+                            <tr class="border-bottom">
+                                <td>Calories</td>
+                                <td>@Model.Nutrition.Calories</td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td>Protein</td>
+                                <td>@Model.Nutrition.Protein</td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td>Carbs</td>
+                                <td>@Model.Nutrition.Carbs</td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <td>Total Fat</td>
+                                <td>@Model.Nutrition.Fat</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        @if (Model.Images != null && Model.Images.Count > 0)
+        {
+            <div class="row g-3 p-2">
+                <div class="mb-3 mt-3 bg-light d-flex align-items-center justify-content-center border p-1">
+                    @foreach (var img in Model.Images)
+                    {
+                        @if (img.Status)
+                        {
+                            <div class="recipe-image-item text-center">
+                            <img class="img-thumbnail recipe-main-image fixed-recipe-image m-1 d-block" src="@img.Path" />
+                                <div class="fs-6">@{
+                                        string altText =  img.Description ?? "";
+                                    }
+                                    @altText
+                            </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <img class="img-thumbnail" src="https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" />
+                        }
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="d-flex justify-content-center flex-wrap gap-3 action-flex-group">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="feed-btn edit">Edit</a>
+        <a asp-action="Index" class="feed-btn view">Back to List</a>
+        @await Html.PartialAsync("_REPPartial", Model)
+    </div>
+
+    <partial name="_ModalPartial" />
+
+
+</div>
+
+<script>
+         document.addEventListener("DOMContentLoaded", function () {
+        const printBtn = document.getElementById("printRecipeBtn");
+
+        if (printBtn) {
+            printBtn.addEventListener("click", function () {
+                window.print();
+            });
+        }
+    });
+</script>
+
+<script>
+       const toggleBtn = document.getElementById("toggleTemp");
+    let showingCelsius = false;
+
+    toggleBtn.addEventListener("click", () => {
+        const temps = document.querySelectorAll(".temp-value");
+        showingCelsius = !showingCelsius;
+
+        temps.forEach(td => {
+            const f = parseFloat(td.dataset.f);
+            if(!isNaN(f)){
+                if (showingCelsius) {
+                    const c = ((f - 32) * 5 / 9).toFixed(1);
+                    td.textContent = `${c}°C`;
+                } else {
+                    td.textContent = `${f}°F`;
+                }
+            }else{
+                td.textContent ="";
+            }
+        });
+
+        toggleBtn.textContent = showingCelsius ? "Show °F" : "Show °C";
+    });
+
+</script>

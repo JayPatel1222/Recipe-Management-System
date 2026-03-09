@@ -1,0 +1,25 @@
+:root{ 
+    --burnt-sienna: #dd6e42ff;
+    --dutch-white: #e8dab2ff;
+    --paynes-gray: #4f6d7aff;
+    --columbia-blue: #c0d6dfff;
+    --platinum: #eaeaeaff;
+    --columbia-blue-ligth: rgb(219, 230, 235);
+}
+
+* {
+    margin: 0;
+    padding: 0px;
+}
+
+body {
+    padding: 1em;
+}
+
+header, footer {
+  background-color: var(--columbia-blue);
+}
+img {
+    border-radius: 50%;
+    margin: 0 0.5em;
+}

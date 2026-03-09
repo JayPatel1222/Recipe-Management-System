@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewData["Title"] = "_ModalPartial";
+}
+
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Share Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post" asp-action="Share" asp-controller="Recipes">
+
+                <div class="modal-body">
+                    <label class="form-label">Enter receiver's email:</label>
+                    <input type="email" class="form-control" id="EmailInput" name="email"  />
+                    <div id="EmailError" class="custom-validation fs-6 text-danger"></div>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Enter Subject:</label>
+                    <input type="text" class="form-control" name="subject"  />
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Enter Message:</label>
+                    <input type="text" class="form-control" name="message"  />
+                </div>
+
+                <input type="hidden" name="recipeId" id="shareRecipeId" />
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="sharebtnSubmit">Send</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div> 
+
+@* REcipe SUccess Modal  *@
+<div class="modal fade" id="shareSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Success</h5>
+                <button type="button"
+                        class="btn-close redirect-after-close"
+                        data-bs-dismiss="modal"
+                        data-redirect="/Recipes/Index">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                🎉 Recipe shared successfully!
+            </div>
+
+            <button type="button"
+                    class="btn btn-success redirect-after-close"
+                    data-bs-dismiss="modal"
+                    data-redirect="/Recipes/Index">
+                OK
+            </button>
+
+        </div>
+    </div>
+</div>
+
+
+@* Report Modal *@
+<div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Report Recipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post" asp-action="Report">
+                <div class="modal-body">
+
+                    <input type="hidden" id="reportRecipeId" name="recipeId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Full Name</label>
+                        <input name="fullname" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Your Email</label>
+                        <input name="Email" type="email" id="repEmail" class="form-control"  />
+                        <div id="ReportEmailError" class="custom-validation fs-6 text-danger"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Reason for Report</label>
+                        <textarea name="reason" id="reason" class="form-control" rows="4" ></textarea>
+                        <div id="repReason" class="custom-validation fs-6 text-danger"></div>
+                    </div>
+                    <div id="email&reasonError" class="custom-validation fs-6 text-danger"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="reportBtnSubmit" class="btn btn-danger">Send Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Report Success Modal *@
+<div class="modal fade" id="ReportSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Success</h5>
+                <button type="button"
+                        class="btn-close redirect-after-close"
+                        data-bs-dismiss="modal"
+                        data-redirect="/Recipes">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Admin will review the report and get back to you ASAP !! Thank you 
+            </div>
+
+            <button type="button"
+                    class="btn btn-success redirect-after-close"
+                    data-bs-dismiss="modal"
+                    data-redirect="/Recipes">
+                OK
+            </button>
+
+        </div>
+    </div>
+</div>
+
